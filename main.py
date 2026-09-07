@@ -53,11 +53,11 @@ while running:
 
         # vertical lines
         pygame.draw.line(screen, "black", (200, 0), (200, 600), width=12)
-        pygame.draw.line(screen, "black", (400, 0), (400, 600), width=12)
+        pygame.draw.line(screen, "black", (398, 0), (398, 600), width=12)
         
         # horizontal lines
         pygame.draw.line(screen, "black", (0, 200), (600, 200), width=12)
-        pygame.draw.line(screen, "black", (0, 400), (600, 400), width=12)
+        pygame.draw.line(screen, "black", (0, 398), (600, 398), width=12)
 
         for i in range(len(player_data)):
             for j in range(len(player_data)):
@@ -68,11 +68,11 @@ while running:
                 
         # vertical lines
         pygame.draw.line(screen, "black", (200, 0), (200, 600), width=12)
-        pygame.draw.line(screen, "black", (400, 0), (400, 600), width=12)
+        pygame.draw.line(screen, "black", (398, 0), (398, 600), width=12)
         
         # horizontal lines
         pygame.draw.line(screen, "black", (0, 200), (600, 200), width=12)
-        pygame.draw.line(screen, "black", (0, 400), (600, 400), width=12)
+        pygame.draw.line(screen, "black", (0, 398), (600, 398), width=12)
         pygame.draw.rect(screen, "red", (200, 350, 400, 100))
                 
 
