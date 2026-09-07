@@ -34,16 +34,6 @@ while running:
 
     screen.fill("gray")
 
-    pygame.draw.rect(screen, "red", [0,0,200,200])
-    pygame.draw.rect(screen, "blue", [200,0,200,200])
-    pygame.draw.rect(screen, "orange", [400,0,200,200])
-    pygame.draw.rect(screen, "red", [0,200,200,200])
-    pygame.draw.rect(screen, "blue", [200,200,200,200])
-    pygame.draw.rect(screen, "orange", [400,200,200,200])
-    pygame.draw.rect(screen, "red", [0,400,200,200])
-    pygame.draw.rect(screen, "blue", [200,400,200,200])
-    pygame.draw.rect(screen, "orange", [400,400,200,200])
-
     # vertical lines
     pygame.draw.line(screen, "black", (200, 0), (200, 600), width=12)
     pygame.draw.line(screen, "black", (400, 0), (400, 600), width=12)
@@ -52,20 +42,29 @@ while running:
     pygame.draw.line(screen, "black", (0, 200), (600, 200), width=12)
     pygame.draw.line(screen, "black", (0, 400), (600, 400), width=12)
 
+    for i in range(len(test_data)):
+        for j in range(len(test_data)):
+            if test_data[i][j] == 1:
+                pygame.draw.rect(screen, "red", [i * 200, j * 200, 100, 100])
+
     pygame.display.flip()
+
 
     ### Game start
 
-    game_result = False
-    i = 0
-
     if event.type == pygame.MOUSEBUTTONDOWN:
-        if event.button == 1 and pt1.collidepoint(mouse_pos):
-            pygame.draw.rect(screen, "red", (323,34,144,144))
-            pygame.display.flip()
-            i += 1
-            game_result = True
+        if event.button == 1:
+            player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] = 1
+
+        for i in range(len(test_data)):
+                for j in range(len(test_data)):
+                    if test_data[i][j] == 1:
+                        pygame.draw.rect(screen, "red", [i * 200, j * 200, 100, 100])
+        pygame.display.flip() 
+
 
     clock.tick(60)
+
+print(player_data)
 
 pygame.quit()
