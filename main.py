@@ -1,104 +1,77 @@
 # Tic Tac Toe Game
-
 import pygame
+from board import Board
 
+# Player data on game start -> all empty
 player_data = [[0,0,0], [0,0,0], [0,0,0]]
 test_data = [[1,0,0], [0,1,0], [0,0,1]]
 
+# Set window name
 pygame.display.set_caption("Tic Tac Toe!")
 
-print(player_data)
-print(test_data)
-pygame.init()
-pygame.font.init()
-screen = pygame.display.set_mode((600,600))
-clock = pygame.time.Clock()
-running = True
+pygame.init() # Initialize pygame instance
+pygame.font.init() # Initialize pygame font instance
+screen = pygame.display.set_mode((600,600)) # Create screen w/ resolution
+clock = pygame.time.Clock() # Create clock variable using pygame's built-in clock
+running = True # Game state is set to running
 
-p1_turn = True
+p1_turn = True # Tic-tac-toe turn base starting w/ p1
 
-x_img = pygame.image.load('X.png').convert()
-o_img = pygame.image.load('O.png').convert()
+x_img = pygame.image.load('X.png').convert() # load & convert X icon
+o_img = pygame.image.load('O.png').convert() # load & convert O icon
 
-pt1 = pygame.Rect(0,0,200,200)
-pt2 = pygame.Rect(200,0,200,200)
-pt3 = pygame.Rect(400,0,200,200)
-pt4 = pygame.Rect(0,200,200,200)
-pt5 = pygame.Rect(200,200,200,200)
-pt6 = pygame.Rect(400,200,200,200)
-pt7 = pygame.Rect(0,400,200,200)
-pt8 = pygame.Rect(200,400,200,200)
-pt9 = pygame.Rect(400,400,200,200)
+# Initiate board object
+board = Board()
 
+# Create counter variable to later keep track of turn
 ctr = 1
 
+# Pygame may be running, but game logic isn't yet (wait for start screen)
 game_start = False
 
+# Pygame loop until game is ended
 while running:
 
+    # Start screen button
     start_button = pygame.Rect(200,350,100,100)
     game_start = True
 
+    # Once game has been started by player
     while game_start:
-
-        ### Pre-game procedures
 
         mouse_pos = pygame.mouse.get_pos()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        screen.fill("white")
-
-        # vertical lines
-        pygame.draw.line(screen, "black", (200, 0), (200, 600), width=12)
-        pygame.draw.line(screen, "black", (398, 0), (398, 600), width=12)
+        ### Pre-game procedures
         
-        # horizontal lines
-        pygame.draw.line(screen, "black", (0, 200), (600, 200), width=12)
-        pygame.draw.line(screen, "black", (0, 398), (600, 398), width=12)
 
-        for i in range(len(player_data)):
-            for j in range(len(player_data)):
-                if player_data[i][j] == 1:
-                    screen.blit(x_img, (j * 200, i * 200))
-                elif player_data[i][j] == 2:
-                    screen.blit(o_img, (j * 200, i * 200))
-                
-        # vertical lines
-        pygame.draw.line(screen, "black", (200, 0), (200, 600), width=12)
-        pygame.draw.line(screen, "black", (398, 0), (398, 600), width=12)
-        
-        # horizontal lines
-        pygame.draw.line(screen, "black", (0, 200), (600, 200), width=12)
-        pygame.draw.line(screen, "black", (0, 398), (600, 398), width=12)
-        pygame.draw.rect(screen, "red", (200, 350, 400, 100))
-                
+        board.drawBoard(screen, player_data, x_img, o_img)                
 
         pygame.display.flip()
 
+        # Check player turn
         if ctr % 2 == 0:
             p1_turn = False
         else:
             p1_turn = True
 
-        ### Game start
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_start = False
+                running = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                if p1_turn == True:
-                    if player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 1 or player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 2:
-                        continue
-                    player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] = 1
-                else:
-                    if player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 1 or player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 2:
-                        continue
-                    player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] = 2
-                ctr += 1
-                print(ctr)
-                print(player_data[0])
-
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if p1_turn == True:
+                        if player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 1 or player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 2:
+                            continue
+                        player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] = 1
+                    else:
+                        if player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 1 or player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 2:
+                            continue
+                        player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] = 2
+                    ctr += 1
+                    print(ctr)
+                    print(player_data[0])
 
         clock.tick(60)
 
