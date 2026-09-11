@@ -1,6 +1,7 @@
 # Tic Tac Toe Game
 import pygame
 from board import Board
+from events import checkSpot, setSpot
 
 # Player data on game start -> all empty
 player_data = [[0,0,0], [0,0,0], [0,0,0]]
@@ -42,8 +43,6 @@ while running:
         mouse_pos = pygame.mouse.get_pos()
 
         ### Pre-game procedures
-        
-
         board.drawBoard(screen, player_data, x_img, o_img)                
 
         pygame.display.flip()
@@ -54,29 +53,33 @@ while running:
         else:
             p1_turn = True
 
+        # Examine events (quit, player choice)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_start = False
                 running = False
-
+    
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if p1_turn == True:
-                        if player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 1 or player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 2:
+                        if checkSpot(player_data, mouse_pos):
                             continue
-                        player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] = 1
+                        setSpot(player_data, mouse_pos, 1)
                     else:
-                        if player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 1 or player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 2:
+                        if checkSpot(player_data, mouse_pos):
                             continue
-                        player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] = 2
+                        setSpot(player_data, mouse_pos, 2)
                     ctr += 1
                     print(ctr)
                     print(player_data[0])
 
+        # Keep frame rate at 60fps
         clock.tick(60)
 
+        # Check simple win
         if player_data[0] == [1, 1, 1]:
             game_start = False
+            running = False # Remove and replace with game over screen
 
 print(player_data)
 
