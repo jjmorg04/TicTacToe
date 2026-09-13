@@ -1,5 +1,5 @@
 import pygame
-import pprint
+
 
 def checkSpot(player_data, mouse_pos):
     if player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 1 or player_data[mouse_pos[1] // 200][mouse_pos[0] // 200] == 2:
@@ -35,11 +35,13 @@ def checkWin(player_data, x):
             win_detected = True
             return win_detected
 
+    j = 0
     for i in range(2, -1, -1):
-        if player_data[i][i] != x:
+        if player_data[i][j] != x:
             break
         elif i == 0:
             win_detected = True
             return win_detected
+        j += 1
 
     return win_detected

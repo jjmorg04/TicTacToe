@@ -33,6 +33,42 @@ game_start = False
 # Pygame loop until game is ended
 while running:
 
+
+    font1 = pygame.font.Font('freesansbold.ttf', 32)
+    font2 = pygame.font.Font('freesansbold.ttf', 56)
+    startGameText = font1.render('Start game?', True, "black", None)
+    gameTitleText = font2.render('Tic Tac Toe!', True, "blue", None)
+    yesText = font1.render('Yes', True, "white", None)
+    noText = font1.render('No', True, "white", None)
+
+    yesRect = pygame.Rect(130,250,150,50)
+    noRect = pygame.Rect(320,250,150,50)
+
+    plyrStart = False
+    while(not plyrStart):    
+        screen.fill("white")
+        screen.blit(gameTitleText, (141, 100))
+        screen.blit(startGameText, (205, 200))
+        pygame.draw.rect(screen, "green", (130, 250, 150,50))
+        pygame.draw.rect(screen, "red", (320, 250, 150,50))
+        screen.blit(yesText, (178, 259))
+        screen.blit(noText, (373.5, 259))
+        pygame.display.flip()
+
+        print(noRect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if yesRect.collidepoint(event.pos):
+                        plyrStart = True
+                    if noRect.collidepoint(event.pos):
+                        pygame.quit()
+
+    
     # Start screen button
     start_button = pygame.Rect(200,350,100,100)
     game_start = True
@@ -84,7 +120,33 @@ while running:
         # Check simple win
         if checkWin(player_data, plyr):
             game_start = False
-            running = False # Remove and replace with game over screen
+            gameOver = True
+            while(gameOver):
+                playAgainText = font1.render('Play again?', True, "black", None)
+                screen.fill("white")
+                screen.blit(playAgainText, (208,150))
+                pygame.draw.rect(screen, "green", (130, 250, 150,50))
+                pygame.draw.rect(screen, "red", (320, 250, 150,50))
+                screen.blit(yesText, (178, 259))
+                screen.blit(noText, (373.5, 259))
+                pygame.display.flip()
+                print(playAgainText.get_rect())
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        gameOver = False
+                        running = False
+
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.button == 1:
+                            if yesRect.collidepoint(event.pos):
+                                player_data = [[0,0,0], [0,0,0], [0,0,0]]
+                                ctr = 1
+                                game_start = True
+                                gameOver = False
+                            if noRect.collidepoint(event.pos):
+                                pygame.quit()
+
 
 print(player_data)
 
