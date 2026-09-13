@@ -1,11 +1,10 @@
 # Tic Tac Toe Game
 import pygame
 from board import Board
-from events import checkSpot, setSpot, checkWin
+from events import checkSpot, setSpot, checkWin, startScreen, gameEnd
 
 # Player data on game start -> all empty
 player_data = [[0,0,0],[0,0,0],[0,0,0]]
-test_data = [[1,0,0], [0,1,0], [0,0,1]]
 
 # Set window name
 pygame.display.set_caption("Tic Tac Toe!")
@@ -30,32 +29,20 @@ ctr = 1
 # Pygame may be running, but game logic isn't yet (wait for start screen)
 game_start = False
 
+# Create collision rects
+yesRect = pygame.Rect(130,250,150,50)
+noRect = pygame.Rect(320,250,150,50)
+
 # Pygame loop until game is ended
 while running:
 
-
-    font1 = pygame.font.Font('freesansbold.ttf', 32)
-    font2 = pygame.font.Font('freesansbold.ttf', 56)
-    startGameText = font1.render('Start game?', True, "black", None)
-    gameTitleText = font2.render('Tic Tac Toe!', True, "blue", None)
-    yesText = font1.render('Yes', True, "white", None)
-    noText = font1.render('No', True, "white", None)
-
-    yesRect = pygame.Rect(130,250,150,50)
-    noRect = pygame.Rect(320,250,150,50)
-
+    # Has player started the game yet?
     plyrStart = False
-    while(not plyrStart):    
-        screen.fill("white")
-        screen.blit(gameTitleText, (141, 100))
-        screen.blit(startGameText, (205, 200))
-        pygame.draw.rect(screen, "green", (130, 250, 150,50))
-        pygame.draw.rect(screen, "red", (320, 250, 150,50))
-        screen.blit(yesText, (178, 259))
-        screen.blit(noText, (373.5, 259))
-        pygame.display.flip()
 
-        print(noRect)
+    # Start screen
+    while(not plyrStart):    
+
+        startScreen(screen)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -111,27 +98,15 @@ while running:
                             continue
                         setSpot(player_data, mouse_pos, 2)
                     ctr += 1
-                    print(ctr)
-                    print(player_data[0])
-
-        # Keep frame rate at 60fps
-        clock.tick(60)
 
         # Check simple win
         if checkWin(player_data, plyr):
             game_start = False
             gameOver = True
-            while(gameOver):
-                playAgainText = font1.render('Play again?', True, "black", None)
-                screen.fill("white")
-                screen.blit(playAgainText, (208,150))
-                pygame.draw.rect(screen, "green", (130, 250, 150,50))
-                pygame.draw.rect(screen, "red", (320, 250, 150,50))
-                screen.blit(yesText, (178, 259))
-                screen.blit(noText, (373.5, 259))
-                pygame.display.flip()
-                print(playAgainText.get_rect())
 
+            while(gameOver):
+                gameEnd(screen)
+                
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         gameOver = False
@@ -145,9 +120,11 @@ while running:
                                 game_start = True
                                 gameOver = False
                             if noRect.collidepoint(event.pos):
-                                pygame.quit()
+                                gameOver = False
+                                running = False
 
 
-print(player_data)
+        # Keep frame rate at 60fps
+        clock.tick(60)
 
 pygame.quit()
