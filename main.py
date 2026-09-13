@@ -1,130 +1,135 @@
 # Tic Tac Toe Game
 import pygame
-from board import Board
-from events import checkSpot, setSpot, checkWin, startScreen, gameEnd
+from src.board import Board
+from src.events import checkSpot, setSpot, checkWin, startScreen, gameEnd
 
-# Player data on game start -> all empty
-player_data = [[0,0,0],[0,0,0],[0,0,0]]
+def main():
 
-# Set window name
-pygame.display.set_caption("Tic Tac Toe!")
+    # Player data on game start -> all empty
+    player_data = [[0,0,0],[0,0,0],[0,0,0]]
 
-pygame.init() # Initialize pygame instance
-pygame.font.init() # Initialize pygame font instance
-screen = pygame.display.set_mode((600,600)) # Create screen w/ resolution
-clock = pygame.time.Clock() # Create clock variable using pygame's built-in clock
-running = True # Game state is set to running
+    # Set window name
+    pygame.display.set_caption("Tic Tac Toe!")
 
-p1_turn = True # Tic-tac-toe turn base starting w/ p1
+    pygame.init() # Initialize pygame instance
+    pygame.font.init() # Initialize pygame font instance
+    screen = pygame.display.set_mode((600,600)) # Create screen w/ resolution
+    clock = pygame.time.Clock() # Create clock variable using pygame's built-in clock
+    running = True # Game state is set to running
 
-x_img = pygame.image.load('X.png').convert() # load & convert X icon
-o_img = pygame.image.load('O.png').convert() # load & convert O icon
+    p1_turn = True # Tic-tac-toe turn base starting w/ p1
 
-# Initiate board object
-board = Board()
+    x_img = pygame.image.load('./assets/X.png').convert() # load & convert X icon
+    o_img = pygame.image.load('./assets/O.png').convert() # load & convert O icon
 
-# Create counter variable to later keep track of turn
-ctr = 1
+    # Initiate board object
+    board = Board()
 
-# Pygame may be running, but game logic isn't yet (wait for start screen)
-game_start = False
+    # Create counter variable to later keep track of turn
+    ctr = 1
 
-# Create collision rects
-yesRect = pygame.Rect(130,250,150,50)
-noRect = pygame.Rect(320,250,150,50)
+    # Pygame may be running, but game logic isn't yet (wait for start screen)
+    game_start = False
 
-# Pygame loop until game is ended
-while running:
+    # Create collision rects
+    yesRect = pygame.Rect(130,250,150,50)
+    noRect = pygame.Rect(320,250,150,50)
 
-    # Has player started the game yet?
-    plyrStart = False
+    # Pygame loop until game is ended
+    while running:
 
-    # Start screen
-    while(not plyrStart):    
+        # Has player started the game yet?
+        plyrStart = False
 
-        startScreen(screen)
+        # Start screen
+        while(not plyrStart):    
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+            startScreen(screen)
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    if yesRect.collidepoint(event.pos):
-                        plyrStart = True
-                    if noRect.collidepoint(event.pos):
-                        pygame.quit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
 
-    
-    # Start screen button
-    start_button = pygame.Rect(200,350,100,100)
-    game_start = True
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        if yesRect.collidepoint(event.pos):
+                            plyrStart = True
+                        if noRect.collidepoint(event.pos):
+                            pygame.quit()
 
-    # Once game has been started by player
-    while game_start:
+        
+        # Start screen button
+        start_button = pygame.Rect(200,350,100,100)
+        game_start = True
 
-        mouse_pos = pygame.mouse.get_pos()
+        # Once game has been started by player
+        while game_start:
 
-        ### Pre-game procedures
-        board.drawBoard(screen, player_data, x_img, o_img)                
+            mouse_pos = pygame.mouse.get_pos()
 
-        pygame.display.flip()
+            ### Pre-game procedures
+            board.drawBoard(screen, player_data, x_img, o_img)                
 
-        # Check player turn
-        if ctr % 2 == 0:
-            p1_turn = False
-        else:
-            p1_turn = True
+            pygame.display.flip()
 
-        if p1_turn:
-            plyr = 1
-        else:
-            plyr = 2
+            # Check player turn
+            if ctr % 2 == 0:
+                p1_turn = False
+            else:
+                p1_turn = True
 
-        # Examine events (quit, player choice)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_start = False # Break out of game logic
-                running = False # Break out of pygame instance, end
-    
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    if p1_turn == True:
-                        if checkSpot(player_data, mouse_pos):
-                            continue
-                        setSpot(player_data, mouse_pos, 1)
-                    else:
-                        if checkSpot(player_data, mouse_pos):
-                            continue
-                        setSpot(player_data, mouse_pos, 2)
-                    ctr += 1
+            if p1_turn:
+                plyr = 1
+            else:
+                plyr = 2
 
-        # Check simple win
-        if checkWin(player_data, plyr):
-            game_start = False
-            gameOver = True
+            # Examine events (quit, player choice)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_start = False # Break out of game logic
+                    running = False # Break out of pygame instance, end
+        
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        if p1_turn == True:
+                            if checkSpot(player_data, mouse_pos):
+                                continue
+                            setSpot(player_data, mouse_pos, 1)
+                        else:
+                            if checkSpot(player_data, mouse_pos):
+                                continue
+                            setSpot(player_data, mouse_pos, 2)
+                        ctr += 1
 
-            while(gameOver):
-                gameEnd(screen)
-                
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        gameOver = False
-                        running = False
+            # Check simple win
+            if checkWin(player_data, plyr):
+                game_start = False
+                gameOver = True
 
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        if event.button == 1:
-                            if yesRect.collidepoint(event.pos):
-                                player_data = [[0,0,0], [0,0,0], [0,0,0]]
-                                ctr = 1
-                                game_start = True
-                                gameOver = False
-                            if noRect.collidepoint(event.pos):
-                                gameOver = False
-                                running = False
+                while(gameOver):
+                    gameEnd(screen)
+                    
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            gameOver = False
+                            running = False
+
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            if event.button == 1:
+                                if yesRect.collidepoint(event.pos):
+                                    player_data = [[0,0,0], [0,0,0], [0,0,0]]
+                                    ctr = 1
+                                    game_start = True
+                                    gameOver = False
+                                if noRect.collidepoint(event.pos):
+                                    gameOver = False
+                                    running = False
 
 
-        # Keep frame rate at 60fps
-        clock.tick(60)
+            # Keep frame rate at 60fps
+            clock.tick(60)
 
-pygame.quit()
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()

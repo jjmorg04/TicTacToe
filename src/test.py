@@ -1,4 +1,4 @@
-from events import checkWin
+from src.events import checkWin
 
 def main():
     player_data = [[0,1,1],[0,0,1],[0,1,1]]
