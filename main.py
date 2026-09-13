@@ -1,10 +1,10 @@
 # Tic Tac Toe Game
 import pygame
 from board import Board
-from events import checkSpot, setSpot
+from events import checkSpot, setSpot, checkWin
 
 # Player data on game start -> all empty
-player_data = [[0,0,0], [0,0,0], [0,0,0]]
+player_data = [[0,0,0],[0,0,0],[0,0,0]]
 test_data = [[1,0,0], [0,1,0], [0,0,1]]
 
 # Set window name
@@ -53,11 +53,16 @@ while running:
         else:
             p1_turn = True
 
+        if p1_turn:
+            plyr = 1
+        else:
+            plyr = 2
+
         # Examine events (quit, player choice)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                game_start = False
-                running = False
+                game_start = False # Break out of game logic
+                running = False # Break out of pygame instance, end
     
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -77,7 +82,7 @@ while running:
         clock.tick(60)
 
         # Check simple win
-        if player_data[0] == [1, 1, 1]:
+        if checkWin(player_data, plyr):
             game_start = False
             running = False # Remove and replace with game over screen
 
